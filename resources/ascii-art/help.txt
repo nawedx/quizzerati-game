@@ -1,0 +1,15 @@
+There are 5 rounds in the game.
+
+1. Technology
+
+2. Sports
+
+3. Politics
+
+4. Science
+
+5. Literature
+
+Each player can use the hint feature atmost two times in the game.
+
+
