@@ -5,6 +5,7 @@
 #include <fstream>
 using namespace std;
 string roundList[] = {"Technology", "Sports", "Politics", "Science", "Literature"};
+string questionsFileList[] = {"questions/technology.txt", "questions/sports.txt", "questions/science.txt", "questions/politics.txt", "questions/literature.txt"};
 
 string getstring()
 {
@@ -82,6 +83,7 @@ public:
 };
 
 class playerInfo{
+protected:
 	string playerName[6];
 public:
 	void getPlayerName(int playerCount)
@@ -106,20 +108,14 @@ public:
 
 class round{
 	int roundNumber;
-	//string roundName;
 public:
 	void updateRound()
 	{
 		roundNumber++;
-		//roundName=roundList[roundNumber-1];
 	}
 	int getRoundNumber()
 	{
 		return roundNumber;
-	}
-	string getRoundName()
-	{
-		//return roundName;
 	}
 	void displayRound(int j)
 	{
@@ -135,8 +131,14 @@ public:
 };
 
 class score{
+protected:
 	int points[6];
 public:
+	score()
+	{
+		for(int i=0; i<6; i++)
+			points[i]=0;
+	}
 	void scoreUpdateDirect(int playerID, bool responseStatus)
 	{
 		if(responseStatus==true)
@@ -151,16 +153,23 @@ public:
 		else if(responseStatus==false)
 			points[playerID]-=2;
 	}
-	void showScore(int plNum)
+	int getScore(int playerID)
 	{
-		for(int i=0; i<plNum; i++)
-		{
-			
-		}
+		return points[playerID];
 	}
 };
+
+class questionImport{
+protected:
+	string ques, a, b, c, d, correctOption, givenOption;
+public:
+		
+
+};
+
 class newGame : public playerInfo, public round, public score{
 	int players;
+	
 public:
 	void playerCount()
 	{
@@ -176,6 +185,21 @@ public:
 	{
 		return players;
 	}
+	void showAllScore()
+	{
+		int i, row, col, response;
+		initscr();
+		getmaxyx(stdscr, row, col);
+		mvprintw(row/3-3, (col-13)/2, "Current Score");
+		for(int i=0; i<players; i++)
+		{
+			mvprintw(row/3+(2*i), (col-25)/2-5, "%s : %d", playerName[i].c_str(), points[i]);					
+			refresh();
+		}
+		getch();
+		clear();
+		refresh();		
+	}	
 };
 
 
@@ -191,11 +215,69 @@ int main()
 		{
 			newGame game;
 			game.playerCount();
+			//int num=game.getPlayerCount();
 			game.getPlayerName(game.getPlayerCount());
 			for(int i=0; i<5; i++)
 			{
 				game.updateRound();
+				ifstream fin;
+				fin.open(questionsFileList[i]);
 				game.displayRound(i);
+				int row, col;
+				initscr();
+				getmaxyx(stdscr, row, col);
+				for(int j=0; j<game.getPlayerCount(); j++)
+				{
+					string ques, a, b, c, d, correctOption, givenOption;
+					getline(fin, ques);
+					getline(fin, a);
+					getline(fin, b);
+					getline(fin, c);
+					getline(fin, d);
+					getline(fin, correctOption);
+					//cout<<ques<<endl<<a<<endl<<b<<endl<<c<<endl<<d<<endl<<correctOption<<endl;
+					for(int k=j, m=0; m<game.getPlayerCount(); k++, m++)
+					{
+						k=k%game.getPlayerCount();
+						mvprintw(row/5, (col-9)/2, "Player : %d", k+1);
+						mvprintw(row/3, (col-ques.size())/2, "%s", ques.c_str());
+						mvprintw(row/3+4, col/3, "%s", a.c_str());
+						mvprintw(row/3+4, 2*(col/3), "%s", b.c_str());
+						mvprintw(row/3+8, col/3, "%s", c.c_str());
+						mvprintw(row/3+8, 2*(col/3), "%s", d.c_str());
+						mvprintw(row/3+14, col/2-1, " ");
+						givenOption = getstring();
+						//cout<<givenOption<<endl;
+						refresh();				
+						if(givenOption[0]=='P')
+							continue;
+
+						if(givenOption[0]==correctOption[0])
+						{
+							clear();
+							mvprintw(row/3, (col-14)/2, "Correct answer");
+							refresh();
+							game.scoreUpdateDirect(j, true);
+							getch();
+							break;
+						}
+						else{
+							clear();
+							mvprintw(row/3, (col-12)/2, "Wrong answer");
+							refresh();
+							game.scoreUpdateDirect(j, false);
+							getch();
+							break;
+						}
+						refresh();
+					}
+				}
+				fin.close();
+				clear();
+				game.showAllScore();
+				refresh();
+				
+
 			}
 			
 
