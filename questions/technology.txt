@@ -1,0 +1,60 @@
+1. Who is considered to be The Father of Artificial Intelligence?
+A. Alan Turing
+B. John McCarthy
+C. George Boole
+D. Allen Newell
+B
+2. Which was the first mechanical computer designed by Charles Babbage?
+A. Abacus
+B. Analytical Engine
+C. Calculator
+D. Processor
+B
+3. What is India's first super computer?
+A. Agni
+B. Flow solver
+C. Param
+D. Trisul
+C
+4. Which of the following is NOT operating system?
+A. Dos
+B. Unix
+C. Window NT
+D. Java
+D
+5. Which generation example is UNIVAC? 
+A. First generation computer
+B. Second generation computer
+C. Third generation computer
+D. Fourth generation computer
+A
+6. What was the first movie released in 1982 with terrific computer animation and graphics?
+A. Star wars
+B. Tron
+C. Forbidden planet
+D. Dark star
+A
+7. What is the value of One byte?
+A. 4 bits
+B. 8 bits
+C. 12 bits
+D. 32 bits
+B
+8.Which command combines the contents of one file with another?
+A. RESTORE
+B. RENAME
+C. APPEND
+D. ADD
+C
+9.What is the full form of lP?
+A. Interface program
+B. Interface protocol
+C. Internet program
+D. Internet protocol
+D
+10.What is the full form of TCP is?
+A. Transmission control program
+B. Totalling control program
+C. Transmission control protocol
+D. Total control Protocol
+C

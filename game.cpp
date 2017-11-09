@@ -1,10 +1,9 @@
 #include <iostream>
 #include <ncurses.h>
-#include <string.h>
 #include <string>
 #include <fstream>
 using namespace std;
-string roundList[] = {"Technology", "Sports", "Politics", "Science", "Literature"};
+string roundList[] = {"Technology", "Sports", "Science", "Politics", "Literature"};
 string questionsFileList[] = {"questions/technology.txt", "questions/sports.txt", "questions/science.txt", "questions/politics.txt", "questions/literature.txt"};
 
 string getstring()
@@ -159,14 +158,6 @@ public:
 	}
 };
 
-class questionImport{
-protected:
-	string ques, a, b, c, d, correctOption, givenOption;
-public:
-		
-
-};
-
 class newGame : public playerInfo, public round, public score{
 	int players;
 	
@@ -200,9 +191,33 @@ public:
 		clear();
 		refresh();		
 	}	
+	void finalScreen()
+	{
+		int i, row, col, response;
+		initscr();
+		getmaxyx(stdscr, row, col);
+		mvprintw(row/3-3, (col-15)/2, "Final Standings");
+		for(int i=0; i<players; i++)
+		{
+			mvprintw(row/3+(2*i), (col-25)/2-5, "%s : %d", playerName[i].c_str(), points[i]);					
+			refresh();
+		}
+		int large=points[0], winner;
+		for(i=1; i<players; i++)
+		{
+			if(points[i]>large)
+			{
+				large=points[i];
+				winner=i;
+			}
+		}
+		mvprintw(row/3+13, (col-6)/2, "Winner");
+		mvprintw(row/3+15, (col-playerName[winner].size())/2, "%s", playerName[winner].c_str());
+		getch();
+		clear();
+		refresh();	
+	}
 };
-
-
 
 int main()
 {
@@ -236,10 +251,12 @@ int main()
 					getline(fin, d);
 					getline(fin, correctOption);
 					//cout<<ques<<endl<<a<<endl<<b<<endl<<c<<endl<<d<<endl<<correctOption<<endl;
-					for(int k=j, m=0; m<game.getPlayerCount(); k++, m++)
+					for(int k=j, m=0; m<game.getPlayerCount()-1; k++, m++)
 					{
+						clear();
 						k=k%game.getPlayerCount();
 						mvprintw(row/5, (col-9)/2, "Player : %d", k+1);
+						mvprintw(row/5+2, (col-game.showPlayer(k+1).size())/2, "%s", game.showPlayer(k+1).c_str());
 						mvprintw(row/3, (col-ques.size())/2, "%s", ques.c_str());
 						mvprintw(row/3+4, col/3, "%s", a.c_str());
 						mvprintw(row/3+4, 2*(col/3), "%s", b.c_str());
@@ -257,15 +274,16 @@ int main()
 							clear();
 							mvprintw(row/3, (col-14)/2, "Correct answer");
 							refresh();
-							game.scoreUpdateDirect(j, true);
+							game.scoreUpdateDirect(k, true);
 							getch();
 							break;
 						}
 						else{
 							clear();
 							mvprintw(row/3, (col-12)/2, "Wrong answer");
+							mvprintw(row/3+3, (col-correctOption.size())/2-11, "The Correct answer is %s", correctOption.c_str());
 							refresh();
-							game.scoreUpdateDirect(j, false);
+							game.scoreUpdateDirect(k, false);
 							getch();
 							break;
 						}
@@ -276,18 +294,15 @@ int main()
 				clear();
 				game.showAllScore();
 				refresh();
-				
-
 			}
-			
-
+			game.finalScreen();
 		}
+
 		if(response==2)
 			disp.help();
 		if(response==3)
 			response=disp.exit();
-	}
-	
+	}	
 	endwin();
 	return 0;
-}
+}				
