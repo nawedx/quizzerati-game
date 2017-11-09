@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 using namespace std;
+string roundList[] = {"Technology", "Sports", "Politics", "Science", "Literature"};
+
 string getstring()
 {
     string input;
@@ -21,6 +23,7 @@ string getstring()
     // restore your cbreak / echo settings here
     return input;
 }
+
 class display{
 public:
 	int splashScreen()
@@ -77,12 +80,13 @@ public:
 		return 0;
 	}
 };
+
 class playerInfo{
 	string playerName[6];
 public:
 	void getPlayerName(int playerCount)
 	{
-		int i, row, col, response;
+		int i, row, col;
 		initscr();
 		getmaxyx(stdscr, row, col);
 		for(int i=0; i<playerCount; i++)
@@ -94,8 +98,68 @@ public:
 		clear();
 		refresh();
 	}
+	string showPlayer(int playerNumber)
+	{	
+		return playerName[playerNumber-1];
+	}
 };
-class newGame : public playerInfo{
+
+class round{
+	int roundNumber;
+	//string roundName;
+public:
+	void updateRound()
+	{
+		roundNumber++;
+		//roundName=roundList[roundNumber-1];
+	}
+	int getRoundNumber()
+	{
+		return roundNumber;
+	}
+	string getRoundName()
+	{
+		//return roundName;
+	}
+	void displayRound(int j)
+	{
+		int i, row, col, response;
+		initscr();
+		getmaxyx(stdscr, row, col);
+		mvprintw(row/3, (col-9)/2, "Round : %d", j+1);
+		mvprintw(row/3+4, (col-roundList[j].size())/2, "%s", roundList[j].c_str());
+		getch();
+		clear();
+		refresh();
+	}
+};
+
+class score{
+	int points[6];
+public:
+	void scoreUpdateDirect(int playerID, bool responseStatus)
+	{
+		if(responseStatus==true)
+			points[playerID]+=10;
+		else if(responseStatus==false)
+			points[playerID]-=5;
+	}
+	void scoreUpdatePass(int playerID, bool responseStatus)
+	{
+		if(responseStatus==true)
+			points[playerID]+=5;
+		else if(responseStatus==false)
+			points[playerID]-=2;
+	}
+	void showScore(int plNum)
+	{
+		for(int i=0; i<plNum; i++)
+		{
+			
+		}
+	}
+};
+class newGame : public playerInfo, public round, public score{
 	int players;
 public:
 	void playerCount()
@@ -115,6 +179,7 @@ public:
 };
 
 
+
 int main()
 {
 	display disp;
@@ -127,6 +192,13 @@ int main()
 			newGame game;
 			game.playerCount();
 			game.getPlayerName(game.getPlayerCount());
+			for(int i=0; i<5; i++)
+			{
+				game.updateRound();
+				game.displayRound(i);
+			}
+			
+
 		}
 		if(response==2)
 			disp.help();
