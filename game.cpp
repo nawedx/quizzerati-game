@@ -202,7 +202,7 @@ public:
 			mvprintw(row/3+(2*i), (col-25)/2-5, "%s : %d", playerName[i].c_str(), points[i]);					
 			refresh();
 		}
-		int large=points[0], winner;
+		int large=points[0], winner=0;
 		for(i=1; i<players; i++)
 		{
 			if(points[i]>large)
